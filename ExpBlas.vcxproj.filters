@@ -60,6 +60,9 @@
     <ClInclude Include="quaternions.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="graph_funcs.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="metatools.h">

@@ -196,6 +196,7 @@
     <ClInclude Include="expbase.h" />
     <ClInclude Include="exp_engine.h" />
     <ClInclude Include="ftensor.h" />
+    <ClInclude Include="graph_funcs.h" />
     <ClInclude Include="non_packet.h" />
     <ClInclude Include="op.h" />
     <ClInclude Include="packet.h" />

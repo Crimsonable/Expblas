@@ -9,15 +9,15 @@ using namespace Expblas;
 using namespace std::chrono;
 
 template <typename Container, typename T, Device device,
-          typename = std::enable_if_t<(device <= Device::CPU)>>
-void printTensor(const TensorBase<Container, T, device> &_t) {
-  auto t = _t.derived_to();
-  auto shape = t.get_shape().flat2D();
-  for (int i = 0; i < shape[0]; ++i) {
-    for (int j = 0; j < shape[1]; ++j)
-      std::cout << t.eval(i, j) << " ";
-    std::cout << std::endl;
-  }
+	typename = std::enable_if_t<(device <= Device::CPU)>>
+	void printTensor(const TensorBase<Container, T, device>& _t) {
+	auto t = _t.derived_to();
+	auto shape = t.get_shape().flat2D();
+	for (int i = 0; i < shape[0]; ++i) {
+		for (int j = 0; j < shape[1]; ++j)
+			std::cout << t.eval(i, j) << " ";
+		std::cout << std::endl;
+	}
 }
 
 // void benchmark(Uint x, Uint y, int axis) {
@@ -91,73 +91,80 @@ void printTensor(const TensorBase<Container, T, device> &_t) {
   auto t_r = Ones<float, 1, Device::CPU>(s1);
   auto t0 = std::chrono::high_resolution_clock::now();
   for (int i = 0; i < n; ++i)
-    BlasExcute<float, Device::CPU>::gemv(4, 4, t_l.dataptr(), 4, false,
-                                         t_r.dataptr(), 1, t_res.dataptr(), 1);
+	BlasExcute<float, Device::CPU>::gemv(4, 4, t_l.dataptr(), 4, false,
+										 t_r.dataptr(), 1, t_res.dataptr(), 1);
   auto t1 = std::chrono::high_resolution_clock::now();
   for (int i = 0; i < n; ++i)
-    simple_gemv(t_res.dataptr(), t_l.dataptr(), t_r.dataptr());
+	simple_gemv(t_res.dataptr(), t_l.dataptr(), t_r.dataptr());
   auto t2 = std::chrono::high_resolution_clock::now();
   std::cout << duration_cast<duration<double>>(t1 - t0).count() << std::endl;
   std::cout << duration_cast<duration<double>>(t2 - t1).count() << std::endl;
 }*/
 
 template <typename Func, typename... Args>
-void timer(Func &&f, Args &&...args) {
-  auto t0 = std::chrono::high_resolution_clock::now();
-  f(std::forward<Args>(args)...);
-  auto t1 = std::chrono::high_resolution_clock::now();
-  auto t2 = std::chrono::high_resolution_clock::now();
-  std::cout << duration_cast<duration<double>>(t1 - t0).count() << std::endl;
+void timer(Func&& f, Args &&...args) {
+	auto t0 = std::chrono::high_resolution_clock::now();
+	f(std::forward<Args>(args)...);
+	auto t1 = std::chrono::high_resolution_clock::now();
+	auto t2 = std::chrono::high_resolution_clock::now();
+	std::cout << duration_cast<duration<double>>(t1 - t0).count() << std::endl;
 }
 
-void FTensor_add(FTensor<float, 4> &v, FTensor<float, 4> &v1,
-                 FTensor<float, 4> &v2, int n) {
-  for (int i = 0; i < n; ++i)
-    v = v1 + v2;
+void FTensor_add(FTensor<float, 4>& v, FTensor<float, 4>& v1,
+	FTensor<float, 4>& v2, int n) {
+	for (int i = 0; i < n; ++i)
+		v = v1 + v2;
 }
 
 struct vec4 {
-  float data[4];
+	float data[4];
 };
 
-void navie_add(vec4 &v, vec4 &v1, vec4 &v2, int n) {
-  for (int i = 0; i < n; ++i) {
-    v.data[0] = v1.data[0] + v2.data[0];
-    v.data[1] = v1.data[1] + v2.data[1];
-    v.data[2] = v1.data[2] + v2.data[2];
-    v.data[3] = v1.data[3] + v2.data[3];
-  }
+void navie_add(vec4& v, vec4& v1, vec4& v2, int n) {
+	for (int i = 0; i < n; ++i) {
+		v.data[0] = v1.data[0] + v2.data[0];
+		v.data[1] = v1.data[1] + v2.data[1];
+		v.data[2] = v1.data[2] + v2.data[2];
+		v.data[3] = v1.data[3] + v2.data[3];
+	}
+}
+
+void test_ftensor() {
+	Expblas::FTensor<float, 3> v1(1, 2, 3), v2(1, 2, 3);
+	v1 += v2;
+	std::cout << v1[0] << std::endl;
 }
 
 int main() {
-  // benchmark(2048, 2048, 1);
-  // benchmark_gemv(10240);
-  /*vec4 n, n1, n2;
-  FTensor<float, 4> v, v1{1, 1, 1, 1}, v2{1, 1, 1, 1};
-  v = abs(v1 + v2);
-  printTensor(v);
-  timer(navie_add, n, n1, n2, 1 << 20);
-  timer(FTensor_add, v, v1, v2, 1 << 20);
-  printTensor(v);*/
-  /*FTensor<float, 4> v0, v{1, 2, 3, 4};
-  v0 = 1.0f + v;
-  printTensor(v0);*/
-  // benchmark_cwise(768, 512);
-  // FTensor<float, 4> v{1, 2, 3, 4};
-  // Tensor<float, 2, Device::GPU> t(Shape<2>{4, 4});
-  // Tensor<float, 2, Device::CPU> t_c(Shape<2>{4, 4});
-  // allocSpace(t);
-  // allocSpace(t_c);
-  // auto _r = range(t, {0, 0}, {1, 4});
-  //// t = v + Scalar<float>{1};
-  // Copy(t_c, t);
-  float theta = 90.0 / 180.0 * 3.1415926;
-  quat::Quat<float> q(cos(theta * 0.5), 0, sin(theta * 0.5), 0);
-  quat::Quat<float> q2(cos(theta * 0.5), 0, 0, sin(theta * 0.5));
-  FTensor<float, 3> v(1, 0, 0);
-  auto blended = quat::blend(q, q2);
-  auto rt = quat::rotate(v, blended);
-  printTensor(rt);
-  system("pause");
-  return 0;
+	// benchmark(2048, 2048, 1);
+	// benchmark_gemv(10240);
+	/*vec4 n, n1, n2;
+	FTensor<float, 4> v, v1{1, 1, 1, 1}, v2{1, 1, 1, 1};
+	v = abs(v1 + v2);
+	printTensor(v);
+	timer(navie_add, n, n1, n2, 1 << 20);
+	timer(FTensor_add, v, v1, v2, 1 << 20);
+	printTensor(v);*/
+	/*FTensor<float, 4> v0, v{1, 2, 3, 4};
+	v0 = 1.0f + v;
+	printTensor(v0);*/
+	// benchmark_cwise(768, 512);
+	// FTensor<float, 4> v{1, 2, 3, 4};
+	// Tensor<float, 2, Device::GPU> t(Shape<2>{4, 4});
+	// Tensor<float, 2, Device::CPU> t_c(Shape<2>{4, 4});
+	// allocSpace(t);
+	// allocSpace(t_c);
+	// auto _r = range(t, {0, 0}, {1, 4});
+	//// t = v + Scalar<float>{1};
+	// Copy(t_c, t);
+	/*float theta = 90.0 / 180.0 * 3.1415926;
+	quat::Quat<float> q(cos(theta * 0.5), 0, sin(theta * 0.5), 0);
+	quat::Quat<float> q2(cos(theta * 0.5), 0, 0, sin(theta * 0.5));
+	FTensor<float, 3> v(1, 0, 0);
+	auto blended = quat::blend(q, q2);
+	auto rt = quat::rotate(v, blended);
+	printTensor(rt);*/
+	test_ftensor();
+	system("pause");
+	return 0;
 }
