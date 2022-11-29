@@ -18,15 +18,21 @@ template <> struct TagDispatch<false> { using type = FalseTag; };
   return (... * args);
 }*/
 
+template <typename Head>
+BlasCudaConstruc constexpr auto FoldMul_naive(Head head) {
+  return head;
+}
+
 template <typename Head, typename... Tail>
 BlasCudaConstruc constexpr auto FoldMul_naive(Head head, Tail... tail) {
   return head * FoldMul_naive(tail...);
 }
 
-template <typename Head>
-BlasCudaConstruc constexpr auto FoldMul_naive(Head head) {
-  return head;
-}
+//template<Uint...I> BlasCudaConstruc constexpr auto FoldMul_naive(I... args) {
+//  Uint ret = 1;
+//  ret = ((ret = ret * args), ...);
+//  return ret;
+//}
 
 template <int idx> struct getI;
 template <int idx> struct getI {

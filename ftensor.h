@@ -1,9 +1,6 @@
 #pragma once
-#include "base.h"
-#include "exp_engine.h"
-#include "expbase.h"
-#include "shape.h"
-#include "storage.h"
+#include "metatools.h"
+#include "tensor.h"
 
 namespace Expblas {
 template <typename T, Uint... shapes>
@@ -198,6 +195,32 @@ BlasForceInline BlasCudaConstruc auto dot(FTensor<T, _N, _N> &mat1,
   return res;
 }
 
+template <typename T, Uint _M, Uint _K, Uint _N>
+BlasForceInline BlasCudaConstruc auto dot(FTensor<T, _M, _K> &mat1,
+                                          const FTensor<T, _K, _N> &mat2) {
+  FTensor<T, _M, _N> res;
+  Meta::LoopUnroll<_K - 1>::unroll(
+      [] BlasCudaFunc(Uint K, FTensor<T, _M, _N> & res, FTensor<T, _M, _K> & m1,
+                      const FTensor<T, _K, _N> &m2) {
+        Meta::LoopUnroll<_M - 1>::unroll(
+            [] BlasCudaFunc(Uint M, Uint K, FTensor<T, _M, _N> & res,
+                            FTensor<T, _M, _K> & m1,
+                            const FTensor<T, _K, _N> &m2) {
+              T temp = m1.eval(M, K);
+              Meta::LoopUnroll<_N - 1>::unroll(
+                  [] BlasCudaFunc(
+                      Uint N, Uint M, Uint K, T temp, FTensor<T, _M, _N> & res,
+                      FTensor<T, _M, _K> & m1, const FTensor<T, _K, _N> &m2) {
+                    res.eval_ref(M, N) += temp * m2.eval(K, N);
+                  },
+                  M, K, temp, res, m1, m2);
+            },
+            K, res, m1, m2);
+      },
+      res, mat1, mat2);
+  return res;
+}
+
 template <typename T, Uint... shapes>
 BlasForceInline BlasCudaConstruc auto
 operator+(const FTensor<T, shapes...> &v1, const FTensor<T, shapes...> &v2) {
@@ -296,4 +319,22 @@ BlasForceInline BlasCudaConstruc auto slerp(const FTensor<T, N> &v1,
   T st = T(1.0) / sin(theta);
   return st * sin((1 - t) * theta) * v1 + st * sin(t * theta) * v2;
 }
+
+template <typename T, Uint _N> BlasForceInline BlasCudaConstruc auto eye() {
+  FTensor<T, _N, _N> res;
+  Meta::LoopUnroll<_N - 1>::unroll(
+      [] BlasCudaFunc(Uint N, FTensor<T, _N, _N> & res) {
+        res.eval_ref(N, N) = T(1.0f);
+      },
+      res);
+  return res;
+}
+
+using vec3f = Expblas::FTensor<float, 3>;
+using vec2f = Expblas::FTensor<float, 2>;
+using vec4f = Expblas::FTensor<float, 4>;
+using mat2f = Expblas::FTensor<float, 2, 2>;
+using mat3f = Expblas::FTensor<float, 3, 3>;
+using mat4f = Expblas::FTensor<float, 4, 4>;
+
 } // namespace Expblas
