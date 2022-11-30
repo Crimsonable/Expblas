@@ -3,14 +3,14 @@
 #include <cmath>
 
 #ifdef USE_CUDA
-//#define CUDA_ALIGN_ALLOC
+// #define CUDA_ALIGN_ALLOC
 #include <cuda/cuda_runtime.h>
 #include <cuda/device_launch_parameters.h>
 #define BlasCudaFunc __device__ __host__ inline
 #define BlasCudaConstruc __device__ __host__
 #else
-#define BlasCudaFunc  
-#define BlasCudaConstruc  
+#define BlasCudaFunc
+#define BlasCudaConstruc
 #endif // USE_CUDA
 
 #ifdef USE_MKL
@@ -72,8 +72,9 @@ enum class OperatorType {
 };
 enum class Arch { AVX2 = 1, SSE = 3, Scalar = 7 };
 enum class TransportDir { LocalToDevice, LocalToLocal };
+enum class StorageMajor { Vector, RowMajor, ColumnMajor };
 
-//#define USE_CUDA
+// #define USE_CUDA
 #define BlasForceInline __forceinline
 #define BlasUseSIMD false
 #define BlasDefaultArch Arch::SSE

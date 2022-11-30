@@ -4,7 +4,7 @@
 namespace Expblas {
 template <typename Container, typename T, Device device> class TensorBase;
 template <typename T, int Dim, Device device> class Tensor;
-template <typename T, Uint... shapes> class FTensor;
+template <typename T, StorageMajor Major, Uint... shapes> class FTensor;
 template <typename T, int Dim, Device device> class TensorRange;
 template <typename ElementType> class Scalar;
 
@@ -40,7 +40,9 @@ struct traits<ExpBase<Derived, DType, type>> {
   constexpr static auto device = traits<Derived>::device;
 };
 
-template <int N> struct traits<Shape<N>> { constexpr static int dim = N; };
+template <int N> struct traits<Shape<N>> {
+  constexpr static int dim = N;
+};
 
 template <typename T> struct traits<Scalar<T>> {
   using DataType = T;
@@ -55,7 +57,8 @@ struct traits<Tensor<T, Dim, _device>> {
   constexpr static auto device = _device;
 };
 
-template <typename T, Uint... shapes> struct traits<FTensor<T, shapes...>> {
+template <typename T, StorageMajor Major, Uint... shapes>
+struct traits<FTensor<T, Major, shapes...>> {
   using DataType = T;
   constexpr static int dim = sizeof...(shapes);
   constexpr static auto device = Device::UNIFY;

@@ -110,8 +110,7 @@ void timer(Func &&f, Args &&...args) {
   std::cout << duration_cast<duration<double>>(t1 - t0).count() << std::endl;
 }
 
-void FTensor_add(FTensor<float, 4> &v, FTensor<float, 4> &v1,
-                 FTensor<float, 4> &v2, int n) {
+void FTensor_add(vec4f &v, vec4f &v1, vec4f &v2, int n) {
   for (int i = 0; i < n; ++i)
     v = v1 + v2;
 }
