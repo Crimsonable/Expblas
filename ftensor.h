@@ -385,6 +385,16 @@ using mat4fr = Expblas::FTensor<float, StorageMajor::RowMajor, 4, 4>;
 using vec3d = Expblas::FTensor<double, StorageMajor::Vector, 3>;
 using vec2d = Expblas::FTensor<double, StorageMajor::Vector, 2>;
 using vec4d = Expblas::FTensor<double, StorageMajor::Vector, 4>;
+using mat2d = Expblas::FTensor<double, StorageMajor::ColumnMajor, 2, 2>;
+using mat3d = Expblas::FTensor<double, StorageMajor::ColumnMajor, 3, 3>;
+using mat4d = Expblas::FTensor<double, StorageMajor::ColumnMajor, 4, 4>;
+using mat2dr = Expblas::FTensor<double, StorageMajor::RowMajor, 2, 2>;
+using mat3dr = Expblas::FTensor<double, StorageMajor::RowMajor, 3, 3>;
+using mat4dr = Expblas::FTensor<double, StorageMajor::RowMajor, 4, 4>;
+
+using vec3d = Expblas::FTensor<double, StorageMajor::Vector, 3>;
+using vec2d = Expblas::FTensor<double, StorageMajor::Vector, 2>;
+using vec4d = Expblas::FTensor<double, StorageMajor::Vector, 4>;
 
 using vec3i = Expblas::FTensor<int, StorageMajor::Vector, 3>;
 using vec2i = Expblas::FTensor<int, StorageMajor::Vector, 2>;
