@@ -374,11 +374,24 @@ transpose(FTensor<T, Major, _M, _N> &mat) {}
 using vec3f = Expblas::FTensor<float, StorageMajor::Vector, 3>;
 using vec2f = Expblas::FTensor<float, StorageMajor::Vector, 2>;
 using vec4f = Expblas::FTensor<float, StorageMajor::Vector, 4>;
+
 using mat2f = Expblas::FTensor<float, StorageMajor::ColumnMajor, 2, 2>;
 using mat3f = Expblas::FTensor<float, StorageMajor::ColumnMajor, 3, 3>;
 using mat4f = Expblas::FTensor<float, StorageMajor::ColumnMajor, 4, 4>;
 using mat2fr = Expblas::FTensor<float, StorageMajor::RowMajor, 2, 2>;
 using mat3fr = Expblas::FTensor<float, StorageMajor::RowMajor, 3, 3>;
 using mat4fr = Expblas::FTensor<float, StorageMajor::RowMajor, 4, 4>;
+
+using vec3d = Expblas::FTensor<double, StorageMajor::Vector, 3>;
+using vec2d = Expblas::FTensor<double, StorageMajor::Vector, 2>;
+using vec4d = Expblas::FTensor<double, StorageMajor::Vector, 4>;
+
+using vec3i = Expblas::FTensor<int, StorageMajor::Vector, 3>;
+using vec2i = Expblas::FTensor<int, StorageMajor::Vector, 2>;
+using vec4i = Expblas::FTensor<int, StorageMajor::Vector, 4>;
+
+using vec3ui = Expblas::FTensor<unsigned int, StorageMajor::Vector, 3>;
+using vec2ui = Expblas::FTensor<unsigned int, StorageMajor::Vector, 2>;
+using vec4ui = Expblas::FTensor<unsigned int, StorageMajor::Vector, 4>;
 
 } // namespace Expblas
